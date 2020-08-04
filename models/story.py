@@ -9,7 +9,7 @@ class StoryModel(db.Model):
     title = db.Column(db.String(50))
     text = db.Column(db.String(500))
     image = db.Column(db.String)
-    parent_username = db.Column(db.Integer, db.ForeignKey('users.username'))
+    parent_username = db.Column(db.String, db.ForeignKey('users.username'))
 
     stories = db.relationship('UserModel')
 
