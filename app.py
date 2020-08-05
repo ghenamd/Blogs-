@@ -18,6 +18,7 @@ api = Api(app)
 jwt = JWT(app, authenticate, identity)  # /auth
 api.add_resource(UserRegister, '/register')
 api.add_resource(Story, '/blog/<string:username>')
+api.add_resource(Story, '/blog/<integer:user_id>')
 
 if __name__ == '__main__':
     from db import db

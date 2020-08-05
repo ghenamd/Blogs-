@@ -9,20 +9,20 @@ class StoryModel(db.Model):
     title = db.Column(db.String(50))
     text = db.Column(db.String(500))
     image = db.Column(db.String)
-    parent_username = db.Column(db.String, db.ForeignKey('users.username'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
     stories = db.relationship('UserModel')
 
-    def __init__(self, date, title, text, image, parent_username):
+    def __init__(self, date, title, text, image, user_id):
         self.date = date
         self.title = title
         self.text = text
         self.image = image
-        self.parent_username = parent_username
+        self.user_id = user_id
 
     @classmethod
-    def find_stories_by_username(cls, username):
-        return StoryModel.query.filter_by(parent_username=username).all()
+    def find_stories_by_user_id(cls, user_id):
+        return StoryModel.query.filter_by(user_id=user_id).all()
 
     @classmethod
     def find_story_by_title(cls, title):

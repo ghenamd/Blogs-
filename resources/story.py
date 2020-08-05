@@ -32,14 +32,15 @@ class Story(Resource):
         type=str
     )
 
-    def get(self, username):
+    def get(self, user_id):
 
-        stories = StoryModel.find_stories_by_username(username)
+        stories = StoryModel.find_stories_by_user_id(user_id)
+        user_name = UserModel.find_user_by_id(user_id)
 
         if stories:
-            return {'username': username, 'story': [story.json() for story in stories]}
+            return {'user_id': user_id, 'story': [story.json() for story in stories]}
         else:
-            return {'message': "There are no stories for username'{}' ".format(username),
+            return {'message': "There are no stories for username'{}' ".format(user_name),
                     'error': 404}, 404  # Not found
 
     @jwt_required()
@@ -70,8 +71,9 @@ class Story(Resource):
                 'error': 201}, 201  # created
 
     @jwt_required()
-    def delete(self, username):
-        stories = StoryModel.find_stories_by_username(username)
+    def delete(self, user_id):
+        stories = StoryModel.find_stories_by_user_id(user_id)
+        user_name = UserModel.find_user_by_id(user_id)
 
         if not stories:
             return {"message": "This User's blog is empty'"}
@@ -83,5 +85,5 @@ class Story(Resource):
                 return {'message': "An error occurred while deleting blog",
                         'error': 400}
 
-        return {'message': "'{}' blog has been deleted successfully ".format(username),
+        return {'message': "'{}' blog has been deleted successfully ".format(user_name),
                 'error': 200}
