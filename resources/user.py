@@ -30,4 +30,4 @@ class UserRegister(Resource):
                              password=data['password'])
             user.save_to_db()
             return {'message': "User with name '{}'created successfully".format(data['username']),
-                    'error': 201}, 201
+                    'created': 201}, 201

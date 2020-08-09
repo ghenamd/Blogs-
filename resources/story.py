@@ -34,7 +34,7 @@ class Story(Resource):
 
     def get(self, user_id):
 
-        stories = StoryModel.find_stories_by_user_id(user_id)
+        stories = StoryModel.find_stories_by_user_id(int(user_id))
         user_name = UserModel.find_user_by_id(user_id)
 
         if stories:
@@ -72,7 +72,7 @@ class Story(Resource):
 
     @jwt_required()
     def delete(self, user_id):
-        stories = StoryModel.find_stories_by_user_id(user_id)
+        stories = StoryModel.find_stories_by_user_id(int(user_id))
         user_name = UserModel.find_user_by_id(user_id)
 
         if not stories:
