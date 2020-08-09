@@ -45,11 +45,10 @@ class Story(Resource):
 
     @jwt_required()
     def post(self, user_id):
-        username = UserModel.find_user_by_id(int(user_id))
-        user = UserModel.find_user_by_name(username)
+        user = UserModel.find_user_by_id(int(user_id))
         if not user:
             return {'message': "A user with name '{}' doesn't exists".format(
-                username),
+                user.username),
                        'Bad request': 400}, 400  # bad request
 
         data = Story.parser.parse_args()
@@ -59,7 +58,7 @@ class Story(Resource):
             return {'message': "A story with the title '{}' already exists".format(data['title']),
                     'Bad request': 400}, 400
 
-        story = StoryModel(data['date'], data['title'], data['text'], data['image'], username)
+        story = StoryModel(data['date'], data['title'], data['text'], data['image'], user.username)
 
         try:
             story.save_to_db()
