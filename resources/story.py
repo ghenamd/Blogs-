@@ -35,29 +35,29 @@ class Story(Resource):
     def get(self, user_id):
 
         stories = StoryModel.find_stories_by_user_id(int(user_id))
-        user_name = UserModel.find_user_by_id(user_id)
+        user_name = UserModel.find_user_by_id(int(user_id))
 
         if stories:
             return {'user_id': user_id, 'story': [story.json() for story in stories]}
         else:
             return {'message': "There are no stories for username'{}' ".format(user_name),
-                    'error': 404}, 404  # Not found
+                    'response-Not found': 404}, 404  # Not found
 
     @jwt_required()
-    def post(self, username):
-
+    def post(self, user_id):
+        username = UserModel.find_user_by_id(int(user_id))
         user = UserModel.find_user_by_name(username)
         if not user:
             return {'message': "A user with name '{}' doesn't exists".format(
                 username),
-                       'error': 400}, 400  # bad request
+                       'response-Bad request': 400}, 400  # bad request
 
         data = Story.parser.parse_args()
 
         blog_title = StoryModel.find_story_by_title(data['title'])
         if blog_title:
             return {'message': "A story with the title '{}' already exists".format(data['title']),
-                    'error': 400}, 400
+                    'response-Bad request': 400}, 400
 
         story = StoryModel(data['date'], data['title'], data['text'], data['image'], username)
 
@@ -65,10 +65,10 @@ class Story(Resource):
             story.save_to_db()
         except:
             return {'message': 'An error occurred while inserting a new story',
-                    'error': 500}, 500  # Internal server error
+                    'response-Internal server error': 500}, 500  # Internal server error
 
         return {'message': 'A new story has been added successfully',
-                'error': 201}, 201  # created
+                'response-Created': 201}, 201  # created
 
     @jwt_required()
     def delete(self, user_id):
@@ -86,4 +86,4 @@ class Story(Resource):
                         'error': 400}
 
         return {'message': "'{}' blog has been deleted successfully ".format(user_name),
-                'error': 200}
+                'response-Success': 200}
