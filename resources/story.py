@@ -35,13 +35,13 @@ class Story(Resource):
     def get(self, user_id):
 
         stories = StoryModel.find_stories_by_user_id(int(user_id))
-        user_name = UserModel.find_user_by_id(int(user_id))
+        user = UserModel.find_user_by_id(int(user_id))
 
         if stories:
             return {'user_id': user_id, 'story': [story.json() for story in stories]}
         else:
-            return {'message': "There are no stories for username'{}' ".format(user_name),
-                    'response-Not found': 404}, 404  # Not found
+            return {'message': "There are no stories for username'{}' ".format(user.username),
+                    'Not found': 404}, 404  # Not found
 
     @jwt_required()
     def post(self, user_id):
@@ -50,14 +50,14 @@ class Story(Resource):
         if not user:
             return {'message': "A user with name '{}' doesn't exists".format(
                 username),
-                       'response-Bad request': 400}, 400  # bad request
+                       'Bad request': 400}, 400  # bad request
 
         data = Story.parser.parse_args()
 
         blog_title = StoryModel.find_story_by_title(data['title'])
         if blog_title:
             return {'message': "A story with the title '{}' already exists".format(data['title']),
-                    'response-Bad request': 400}, 400
+                    'Bad request': 400}, 400
 
         story = StoryModel(data['date'], data['title'], data['text'], data['image'], username)
 
@@ -68,12 +68,12 @@ class Story(Resource):
                     'response-Internal server error': 500}, 500  # Internal server error
 
         return {'message': 'A new story has been added successfully',
-                'response-Created': 201}, 201  # created
+                'Created': 201}, 201  # created
 
     @jwt_required()
     def delete(self, user_id):
         stories = StoryModel.find_stories_by_user_id(int(user_id))
-        user_name = UserModel.find_user_by_id(user_id)
+        user = UserModel.find_user_by_id(user_id)
 
         if not stories:
             return {"message": "This User's blog is empty'"}
@@ -83,7 +83,7 @@ class Story(Resource):
                     story.delete_from_db()
             except:
                 return {'message': "An error occurred while deleting blog",
-                        'error': 400}
+                        'Bad request': 400}
 
-        return {'message': "'{}' blog has been deleted successfully ".format(user_name),
-                'response-Success': 200}
+        return {'message': "'{}' blog has been deleted successfully ".format(user.username),
+                'Success': 200}
