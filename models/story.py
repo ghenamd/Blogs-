@@ -11,7 +11,7 @@ class StoryModel(db.Model):
     image = db.Column(db.String)
     user_id = db.Column(db.Integer, db.ForeignKey('users.id'))
 
-    stories = db.relationship('UserModel')
+    user = db.relationship('UserModel')
 
     def __init__(self, date, title, text, image, user_id):
         self.date = date

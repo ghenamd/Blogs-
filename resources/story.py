@@ -32,6 +32,7 @@ class Story(Resource):
         type=str
     )
 
+    @jwt_required
     def get(self, user_id):
 
         stories = StoryModel.find_stories_by_user_id(int(user_id))
@@ -64,7 +65,7 @@ class Story(Resource):
             story.save_to_db()
         except:
             return {'message': 'An error occurred while inserting a new story',
-                    'response-Internal server error': 500}, 500  # Internal server error
+                    'Internal server error': 500}, 500  # Internal server error
 
         return {'message': 'A new story has been added successfully',
                 'Created': 201}, 201  # created
