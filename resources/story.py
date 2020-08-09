@@ -32,7 +32,7 @@ class Story(Resource):
         type=str
     )
 
-    @jwt_required
+    @jwt_required()
     def get(self, user_id):
 
         stories = StoryModel.find_stories_by_user_id(int(user_id))
