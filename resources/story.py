@@ -59,7 +59,7 @@ class Story(Resource):
             return {'message': "A story with the title '{}' already exists".format(data['title']),
                     'Bad request': 400}, 400
 
-        story = StoryModel(data['date'], data['title'], data['text'], data['image'], user.username)
+        story = StoryModel(data['date'], data['title'], data['text'], data['image'], user_id)
 
         try:
             story.save_to_db()
